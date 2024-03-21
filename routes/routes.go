@@ -8,6 +8,7 @@ import (
 	"github.com/arthit666/make_app/middleware"
 	"github.com/arthit666/make_app/pocket"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	jwtware "github.com/gofiber/jwt/v2"
 	"gorm.io/gorm"
 
@@ -17,6 +18,11 @@ import (
 
 func RegRoute(db *gorm.DB) *fiber.App {
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
