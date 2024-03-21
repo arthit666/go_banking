@@ -1,0 +1,394 @@
+definitions:
+  account.AccountRequest:
+    properties:
+      balance:
+        type: number
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  account.AccountResponse:
+    properties:
+      account_number:
+        type: string
+      balance:
+        type: number
+      email:
+        type: string
+      id:
+        type: integer
+      pocket_list:
+        items:
+          $ref: '#/definitions/pocket.Pocket'
+        type: array
+    type: object
+  account.AccountResponseList:
+    properties:
+      count:
+        type: integer
+      page:
+        type: integer
+      result:
+        items:
+          $ref: '#/definitions/account.AccountResponse'
+        type: array
+      total_count:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  account.AccountTransferRequest:
+    properties:
+      amount:
+        type: number
+      to:
+        type: string
+    required:
+    - amount
+    - to
+    type: object
+  account.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  account.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  account.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  pocket.Pocket:
+    properties:
+      balance:
+        type: number
+      create_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      update_at:
+        type: string
+    required:
+    - title
+    type: object
+  pocket.PocketCreate:
+    properties:
+      balance:
+        type: number
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  pocket.PocketTransferRequest:
+    properties:
+      amount:
+        type: number
+      from:
+        type: integer
+      to:
+        type: integer
+    required:
+    - amount
+    - from
+    - to
+    type: object
+  pocket.PocketUpdate:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  pocket.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Banking API
+  version: "1.0"
+paths:
+  /accounts/:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all accounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/account.AccountResponseList'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all accounts
+      tags:
+      - accounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new account with the input payload
+      parameters:
+      - description: Create account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.AccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/account.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Create a new account
+      tags:
+      - accounts
+  /accounts/{id}:
+    get:
+      description: Get account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/account.AccountResponse'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get account by ID
+      tags:
+      - accounts
+  /accounts/transfer/:
+    post:
+      consumes:
+      - application/json
+      description: Transfer funds from one accounts to another with account number
+      parameters:
+      - description: AccountTransferRequest data
+        in: body
+        name: transfer
+        required: true
+        schema:
+          $ref: '#/definitions/account.AccountTransferRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/account.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Transfer funds between accounts
+      tags:
+      - accounts
+  /login/:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate account and obtain access and refresh tokens
+      parameters:
+      - description: Login credentials
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.TokenResponse'
+      summary: Login account
+      tags:
+      - auth
+  /pockets/:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all pocket
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/pocket.Pocket'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all pocket
+      tags:
+      - pockets
+    post:
+      consumes:
+      - application/json
+      description: Create a new pocket with the provided data
+      parameters:
+      - description: PocketCreate data
+        in: body
+        name: pocket
+        required: true
+        schema:
+          $ref: '#/definitions/pocket.PocketCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pocket.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Create a new pocket
+      tags:
+      - pockets
+  /pockets/{id}:
+    delete:
+      description: Delete a pocket by ID
+      parameters:
+      - description: Pocket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pocket.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Delete a pocket
+      tags:
+      - pockets
+    get:
+      description: Get pocket by ID
+      parameters:
+      - description: Pocket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Get pocket by ID
+      tags:
+      - pockets
+    put:
+      consumes:
+      - application/json
+      description: Update a pocket with the provided data
+      parameters:
+      - description: Pocket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PocketUpdate data
+        in: body
+        name: pocket
+        required: true
+        schema:
+          $ref: '#/definitions/pocket.PocketUpdate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pocket.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Update a pocket
+      tags:
+      - pockets
+  /pockets/transfer/:
+    post:
+      consumes:
+      - application/json
+      description: Transfer funds from one pocket to another with pocket id
+      parameters:
+      - description: PocketTransferRequest data
+        in: body
+        name: transfer
+        required: true
+        schema:
+          $ref: '#/definitions/pocket.PocketTransferRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pocket.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Transfer funds between pockets
+      tags:
+      - pockets
+  /refresh:
+    get:
+      consumes:
+      - application/json
+      description: Refresh the access token using a valid refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.TokenResponse'
+      summary: Refresh access token
+      tags:
+      - auth
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

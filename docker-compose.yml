@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ak
+      POSTGRES_PASSWORD: 12345678
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  app:
+    build: .
+    image: banking-app
+    ports:
+      - 8000:8000
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ak
+      DB_PASSWORD: 12345678
+      DB_NAME: postgres
+      JWT_SECRET: secret
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
