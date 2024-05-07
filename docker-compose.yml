@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: make_app
       POSTGRES_USER: ak
       POSTGRES_PASSWORD: 12345678
     volumes:

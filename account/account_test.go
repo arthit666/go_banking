@@ -132,7 +132,7 @@ func TestGetAccountById(t *testing.T) {
 
 	app := fiber.New()
 	handler := New(tx)
-	app.Get("/accounts/:id", handler.GetAccountById)
+	app.Get("/accounts/:id", handler.GetAccountDetail)
 
 	account := Account{
 		Email:         "user@example.com",

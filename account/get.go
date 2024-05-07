@@ -62,17 +62,16 @@ func (h *handler) GetAllAccounts(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @Summary Get account by ID
-// @Description Get account by ID
+// @Summary Get account detail
+// @Description Get account detail
 // @Tags accounts
 // @Produce json
-// @Param id path int true "Account ID"
 // @Security  Bearer
 // @Success 200 {array} account.AccountResponse
-// @Router /accounts/{id} [get]
-func (h *handler) GetAccountById(c *fiber.Ctx) error {
-	id := c.Params("id")
-	acc, err := getById(id, h)
+// @Router /account/ [get]
+func (h *handler) GetAccountDetail(c *fiber.Ctx) error {
+	id := c.Locals("account_id").(int)
+	acc, err := getById(strconv.Itoa(id), h)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(Err{Massage: "account not found"})

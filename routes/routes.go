@@ -41,7 +41,7 @@ func RegRoute(db *gorm.DB) *fiber.App {
 	app.Use(middleware.ExtractUserFromJWT)
 
 	app.Get("/accounts/", a.GetAllAccounts)
-	app.Get("/accounts/:id", a.GetAccountById)
+	app.Get("/account/", a.GetAccountDetail)
 	app.Post("/accounts/transfer", a.Transfer)
 
 	p := pocket.New(db)

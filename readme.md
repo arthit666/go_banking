@@ -1,5 +1,3 @@
-**API document:**[https://go-banking.onrender.com/swagger/](https://go-banking.onrender.com/swagger/)
-
 ## Demo Banking App
 *This is a demo banking application that showcases basic banking functionalities. The app allows users to create accounts, transfer money between accounts using account numbers, and create pockets within accounts to separate funds from the main account balance.*
 
